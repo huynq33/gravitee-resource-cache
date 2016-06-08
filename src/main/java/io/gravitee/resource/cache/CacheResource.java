@@ -15,7 +15,7 @@
  */
 package io.gravitee.resource.cache;
 
-import io.gravitee.resource.api.AbstractResource;
+import io.gravitee.resource.api.AbstractConfigurableResource;
 import io.gravitee.resource.cache.configuration.CacheResourceConfiguration;
 import io.gravitee.resource.cache.ehcache.EhCacheDelegate;
 import net.sf.ehcache.CacheManager;
@@ -23,18 +23,13 @@ import net.sf.ehcache.config.CacheConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-
 /**
  * @author David BRASSELY (david at gravitee.io)
  * @author GraviteeSource Team
  */
-public class CacheResource extends AbstractResource {
+public class CacheResource extends AbstractConfigurableResource<CacheResourceConfiguration> {
 
     private final Logger LOGGER = LoggerFactory.getLogger(CacheResource.class);
-
-    @Inject
-    private CacheResourceConfiguration cacheResourceConfiguration;
 
     private CacheManager cacheManager;
     private Cache cache;
@@ -47,12 +42,12 @@ public class CacheResource extends AbstractResource {
 
         CacheConfiguration configuration = new CacheConfiguration();
         configuration.setEternal(false);
-        configuration.setTimeToIdleSeconds(cacheResourceConfiguration.getTimeToIdleSeconds());
-        configuration.setTimeToLiveSeconds(cacheResourceConfiguration.getTimeToLiveSeconds());
-        configuration.setMaxEntriesLocalHeap(cacheResourceConfiguration.getMaxEntriesLocalHeap());
-        configuration.setName(cacheResourceConfiguration.getName());
+        configuration.setTimeToIdleSeconds(configuration().getTimeToIdleSeconds());
+        configuration.setTimeToLiveSeconds(configuration().getTimeToLiveSeconds());
+        configuration.setMaxEntriesLocalHeap(configuration().getMaxEntriesLocalHeap());
+        configuration.setName(configuration().getName());
 
-        LOGGER.info("Create a new cache resource named {}", cacheResourceConfiguration.getName());
+        LOGGER.info("Create a new cache: {}", configuration().getName());
         net.sf.ehcache.Cache ehCache = new net.sf.ehcache.Cache(configuration);
         cache = new EhCacheDelegate(ehCache);
         cacheManager.addCache(ehCache);
@@ -63,7 +58,7 @@ public class CacheResource extends AbstractResource {
         super.doStop();
 
         if (cacheManager != null) {
-            LOGGER.info("Clear cache resource {}", cacheResourceConfiguration.getName());
+            LOGGER.info("Clear cache {}", configuration().getName());
             cacheManager.shutdown();
         }
     }
