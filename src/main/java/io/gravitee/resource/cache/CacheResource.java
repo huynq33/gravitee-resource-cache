@@ -20,6 +20,8 @@ import io.gravitee.resource.cache.configuration.CacheResourceConfiguration;
 import io.gravitee.resource.cache.ehcache.EhCacheDelegate;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -28,6 +30,8 @@ import javax.inject.Inject;
  * @author GraviteeSource Team
  */
 public class CacheResource extends AbstractResource {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(CacheResource.class);
 
     @Inject
     private CacheResourceConfiguration cacheResourceConfiguration;
@@ -48,6 +52,7 @@ public class CacheResource extends AbstractResource {
         configuration.setMaxEntriesLocalHeap(cacheResourceConfiguration.getMaxEntriesLocalHeap());
         configuration.setName(cacheResourceConfiguration.getName());
 
+        LOGGER.info("Create a new cache resource named {}", cacheResourceConfiguration.getName());
         net.sf.ehcache.Cache ehCache = new net.sf.ehcache.Cache(configuration);
         cache = new EhCacheDelegate(ehCache);
         cacheManager.addCache(ehCache);
@@ -58,6 +63,7 @@ public class CacheResource extends AbstractResource {
         super.doStop();
 
         if (cacheManager != null) {
+            LOGGER.info("Clear cache resource {}", cacheResourceConfiguration.getName());
             cacheManager.shutdown();
         }
     }
