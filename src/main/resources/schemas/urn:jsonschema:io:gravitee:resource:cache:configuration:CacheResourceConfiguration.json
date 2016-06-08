@@ -6,7 +6,7 @@
       "title": "Cache name",
       "description": "The name of the cache.",
       "type" : "string",
-      "default": "default"
+      "default": "my-cache"
     },
     "timeToIdleSeconds" : {
       "title": "Time to idle (in seconds)",

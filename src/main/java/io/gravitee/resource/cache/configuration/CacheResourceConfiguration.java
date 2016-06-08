@@ -23,7 +23,7 @@ import io.gravitee.resource.api.ResourceConfiguration;
  */
 public class CacheResourceConfiguration implements ResourceConfiguration {
 
-    private String name = "default";
+    private String name = "my-cache";
 
     private long timeToIdleSeconds = 0;
 
