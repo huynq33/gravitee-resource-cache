@@ -34,7 +34,7 @@
     <name>Gravitee.io APIM - Resource - Cache</name>
 
     <properties>
-        <gravitee-resource-api.version>1.0.0</gravitee-resource-api.version>
+        <gravitee-resource-api.version>1.1.0-SNAPSHOT</gravitee-resource-api.version>
         <ehcache.version>2.10.2.2.21</ehcache.version>
 
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
@@ -60,6 +60,13 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
