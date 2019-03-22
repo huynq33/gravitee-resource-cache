@@ -29,12 +29,12 @@
 
     <groupId>io.gravitee.resource</groupId>
     <artifactId>gravitee-resource-cache</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
 
     <name>Gravitee.io APIM - Resource - Cache</name>
 
     <properties>
-        <gravitee-resource-api.version>1.1.0-SNAPSHOT</gravitee-resource-api.version>
+        <gravitee-resource-api.version>1.1.0</gravitee-resource-api.version>
         <ehcache.version>2.10.2.2.21</ehcache.version>
 
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
