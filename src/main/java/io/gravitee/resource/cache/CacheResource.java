@@ -15,6 +15,9 @@
  */
 package io.gravitee.resource.cache;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.replicatedmap.ReplicatedMap;
+import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.resource.api.AbstractConfigurableResource;
 import io.gravitee.resource.cache.configuration.CacheResourceConfiguration;
 import io.gravitee.resource.cache.ehcache.EhCacheDelegate;
@@ -41,8 +44,24 @@ public class CacheResource extends AbstractConfigurableResource<CacheResourceCon
     private final Logger LOGGER = LoggerFactory.getLogger(CacheResource.class);
     private ApplicationContext applicationContext;
 
-    private CacheManager cacheManager;
-    private Cache cache;
+    private HazelcastInstance hazelcastInstance;
+    private ApplicationContext applicationContext;
+
+    /**
+     * Generate a unique identifier for the resource cache.
+     *
+     * @param executionContext
+     * @return
+     */
+    private String hash(ExecutionContext executionContext) {
+        StringBuilder sb = new StringBuilder();
+        Object attribute = executionContext.getAttribute(ExecutionContext.ATTR_API);
+        if (attribute != null) {
+            sb.append(attribute).append(KEY_SEPARATOR);
+        }
+        sb.append(configuration().getName());
+        return sb.toString();
+    }
 
     @Override
     protected void doStart() throws Exception {
@@ -97,18 +116,14 @@ public class CacheResource extends AbstractConfigurableResource<CacheResourceCon
         }
     }
 
-    @Override
-    protected void doStop() throws Exception {
-        super.doStop();
-
-        if (cacheManager != null) {
-            LOGGER.info("Clear cache {}", configuration().getName());
-            cacheManager.shutdown();
-        }
+    public Cache getCache(ExecutionContext executionContext) {
+        ReplicatedMap<Object, Object> map = hazelcastInstance.getReplicatedMap(hash(executionContext));
+        return new HazelcastDelegate(map, (int) configuration().getTimeToLiveSeconds());
     }
 
-    public Cache getCache() {
-        return this.cache;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
     private static boolean isEhCache(String cacheType) {

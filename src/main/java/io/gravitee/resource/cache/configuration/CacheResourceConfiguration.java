@@ -31,30 +31,12 @@ public class CacheResourceConfiguration implements ResourceConfiguration {
 
     private long timeToLiveSeconds = 0;
 
-    private long maxEntriesLocalHeap = 1000;
-
-    public long getMaxEntriesLocalHeap() {
-        return maxEntriesLocalHeap;
-    }
-
-    public void setMaxEntriesLocalHeap(long maxEntriesLocalHeap) {
-        this.maxEntriesLocalHeap = maxEntriesLocalHeap;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getTimeToIdleSeconds() {
-        return timeToIdleSeconds;
-    }
-
-    public void setTimeToIdleSeconds(long timeToIdleSeconds) {
-        this.timeToIdleSeconds = timeToIdleSeconds;
     }
 
     public long getTimeToLiveSeconds() {
